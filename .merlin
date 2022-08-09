@@ -5,6 +5,10 @@ B /Users/fu/lab/hitandblow-rescript-react/node_modules/rescript/lib/ocaml
 FLG -w +a-4-9-20-40-41-42-50-61-102
 S /Users/fu/lab/hitandblow-rescript-react/node_modules/@rescript/react/lib/ocaml
 B /Users/fu/lab/hitandblow-rescript-react/node_modules/@rescript/react/lib/ocaml
+S /Users/fu/lab/hitandblow-rescript-react/node_modules/@glennsl/bs-jest/lib/ocaml
+B /Users/fu/lab/hitandblow-rescript-react/node_modules/@glennsl/bs-jest/lib/ocaml
+S test
+B lib/bs/test
 S src
 B lib/bs/src
 ####BSB GENERATED: NO EDIT}
