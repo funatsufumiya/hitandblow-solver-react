@@ -11,5 +11,8 @@ describe("test", () => {
   test("Solver.getRandomSet() test", () => {
     let set = solver.getRandomSet()
     expect(set[0]).toBeOneOf(solver.colorList)
+    expect(set[1]).toBeOneOf(solver.colorList)
+    expect(set[2]).toBeOneOf(solver.colorList)
+    expect(set[3]).toBeOneOf(solver.colorList)
   })
 })
