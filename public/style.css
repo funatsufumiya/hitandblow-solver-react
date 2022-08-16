@@ -1,3 +1,7 @@
+body {
+    /* background-color: #7f7f7f; */
+}
+
 .color {
     display: inline-table;
     width: 20px;
@@ -43,5 +47,5 @@
 }
 
 .color.W {
-    background-color: white;
+    background-color: #d0d0d0;
 }

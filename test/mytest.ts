@@ -26,7 +26,8 @@ describe("Solver tests", () => {
     expect(patterns.length).toBe(1296)
   })
 
-  test("Solver.toString()", () => {
+  test("Solver.colorSetToString()", () => {
     expect(solver.colorSetToString([Color.B, Color.R, Color.G, Color.Y])).toBe("BRGY")
+    expect(solver.colorSetToString([Color.B, Color.B, Color.W, Color.W])).toBe("BBWW")
   })
 })

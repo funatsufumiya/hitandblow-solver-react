@@ -8,6 +8,24 @@ enum GameMode {
   Duplicable, Unduplicable
 }
 
+export type ColorSetFilter = (colorSet: ColorSet) => boolean
+export type int = number
+
+interface Move {
+  colorset: ColorSet
+  hits: int
+  blow: int
+}
+
+class GameState {
+  public readonly nextPossiblePatterns: ColorSet[];
+
+  constructor(public moves: Move[], private prevPossiblePatterns: ColorSet[]) {
+    const patternFilter: ColorSetFilter = Solver.generatePatternFilter(moves[moves.length - 1])
+    this.nextPossiblePatterns = Solver.filterPattern(this.prevPossiblePatterns, patternFilter)
+  }
+}
+
 class __Solver {
   readonly colorList: Color[] = [Color.B, Color.R, Color.G, Color.Y, Color.P, Color.W]
 
@@ -79,6 +97,25 @@ class __Solver {
     return patterns
   }
 
+  private generatePatternFilterRegex = (move: Move): RegExp => {
+    return new RegExp('^.*$')
+  }
+
+  public generatePatternFilter = (move: Move): ColorSetFilter => {
+    const regex = this.generatePatternFilterRegex(move)
+
+    return this.generatePatternFilterFunc(regex)
+  }
+
+  private generatePatternFilterFunc = (regex: RegExp): ColorSetFilter => {
+    return (colorSet: ColorSet): boolean => {
+      return true;
+    };
+  }
+
+  public filterPattern = (colorSets: ColorSet[], filter: ColorSetFilter): ColorSet[] => {
+    return colorSets.filter(filter)
+  }
 }
 
 const Solver = new __Solver()
