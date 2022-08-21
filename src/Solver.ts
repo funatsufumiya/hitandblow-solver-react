@@ -1,3 +1,5 @@
+import unimplemented from 'ts-unimplemented'
+
 enum Color {
   B, R, G, Y, P, W
 }
@@ -11,16 +13,29 @@ enum GameMode {
 export type ColorSetFilter = (colorSet: ColorSet) => boolean
 export type int = number
 
-interface Move {
-  colorset: ColorSet
-  hits: int
-  blow: int
+class Move {
+
+  constructor(public colorSet: ColorSet, public hits: int, public blow: int) {
+  }
+
+  public static parseEach(colorsetStr: string, hits: int, blow: int): Move {
+    return new Move(Solver.stringToColorSet(colorsetStr), hits, blow)
+  }
+
+  public static parse(str: string): Move {
+    let parts = str.split(",")
+    return this.parseEach(parts[0], parseInt(parts[1]), parseInt(parts[2]))
+  }
 }
 
 class GameState {
   public readonly nextPossiblePatterns: ColorSet[];
 
-  constructor(public moves: Move[], private prevPossiblePatterns: ColorSet[]) {
+  constructor(public moves: Move[], private prevPossiblePatterns: ColorSet[], gameMode: GameMode = GameMode.Duplicable) {
+    if (prevPossiblePatterns.length == 0 && moves.length == 1) {
+      this.prevPossiblePatterns = Solver.generatePatterns(gameMode)
+    }
+
     const patternFilter: ColorSetFilter = Solver.generatePatternFilter(moves[moves.length - 1])
     this.nextPossiblePatterns = Solver.filterPattern(this.prevPossiblePatterns, patternFilter)
   }
@@ -46,6 +61,10 @@ class __Solver {
       case Color.P: return '#ff00ff'
       case Color.W: return '#ffffff'
     }
+  }
+
+  public stringToColorSet = (colorSetStr: string): ColorSet => {
+    return colorSetStr.toUpperCase().split('').map(c => (<any>Color)[c])
   }
 
   public getRandomColor = (): Color => {
@@ -97,8 +116,83 @@ class __Solver {
     return patterns
   }
 
+  private getRegExpSourceContent = (regex: RegExp): string => {
+    let s = regex.source
+    if (s.startsWith('^')) {
+      s = s.substring(1)
+    }
+    if (s.endsWith('$')) {
+      s = s.substring(0, s.length - 1)
+    }
+    return s
+  }
+
   private generatePatternFilterRegex = (move: Move): RegExp => {
-    return new RegExp('^.*$')
+    let str = "";
+    if (move.blow == 0) {
+      let s = this.colorSetToString(move.colorSet)
+      if (move.hits == 1) {
+        str = s[0] + "..."
+        str += "|." + s[1] + ".."
+        str += "|.." + s[2] + "."
+        str += "|..." + s[3] + ""
+      } else if (move.hits == 2) {
+        str = s[0] + s[1] + ".."
+        str += "|" + s[0] + "." + s[2] + "."
+        str += "|" + s[0] + ".." + s[3]
+        str += "|." + s[1] + s[2] + "."
+        str += "|." + s[1] + "." + s[3]
+        str += "|.." + s[2] + s[3]
+      } else if (move.hits == 3) {
+        str = s[0] + s[1] + s[2] + "."
+        str += "|" + s[0] + s[1] + "." + s[3]
+        str += "|" + s[0] + "." + s[2] + s[3]
+        str += "|." + s[1] + s[2] + s[3]
+      } else if (move.hits == 4) {
+        str = s
+      } else {
+        return unimplemented()
+      }
+    } else if (move.hits == 0) {
+      let s = this.colorSetToString(move.colorSet)
+      if (move.blow == 1) {
+        let e = ""
+        str = ""
+        e = "[^" + s[3] + "]"
+        str += s[0] + s[1] + s[2] + e
+        str += s[0] + s[2] + s[1] + e
+        str += s[1] + s[2] + s[0] + e
+        str += s[2] + s[1] + s[0] + e
+        str += s[1] + s[0] + s[2] + e
+        str += s[2] + s[0] + s[1] + e
+
+        e = "[^" + s[0] + "]"
+        str += e + s[1] + s[2] + s[3]
+        str += e + s[1] + s[3] + s[2]
+        str += e + s[2] + s[1] + s[3]
+        str += e + s[3] + s[1] + s[2]
+        str += e + s[2] + s[3] + s[1]
+        str += e + s[3] + s[2] + s[1]
+
+        e = "[^" + s[1] + "]"
+        str += s[0] + e + s[2] + s[3]
+        str += s[0] + e + s[3] + s[2]
+        str += s[2] + e + s[0] + s[3]
+        str += s[3] + e + s[0] + s[2]
+        str += s[2] + e + s[3] + s[0]
+        str += s[3] + e + s[2] + s[0]
+
+        e = "[^" + s[2] + "]"
+        str += s[0] + s[1] + e + s[3]
+        str += s[0] + s[3] + e + s[1]
+        str += s[1] + s[0] + e + s[3]
+      } else {
+        return unimplemented()
+      }
+    } else {
+      return unimplemented()
+    }
+    return new RegExp("^" + str + "$")
   }
 
   public generatePatternFilter = (move: Move): ColorSetFilter => {
@@ -121,4 +215,4 @@ class __Solver {
 const Solver = new __Solver()
 
 export default Solver
-export { Color, GameMode }
+export { Color, GameMode, Move }
