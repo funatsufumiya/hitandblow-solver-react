@@ -1,8 +1,8 @@
 import React from 'react';
-import Solver from './Solver';
+import Solver from '../Solver';
 import ColorSetVisualizer from './ColorSetVisualizer';
 
-const App = () => {
+const GameStatesVisualizer = () => {
   return <React.Fragment>
     {
       Solver.generatePatterns().map((pattern, index) => {
@@ -12,4 +12,4 @@ const App = () => {
   </React.Fragment>
 }
 
-export default App;
+export default GameStatesVisualizer;

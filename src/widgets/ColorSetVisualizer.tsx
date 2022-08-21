@@ -1,5 +1,5 @@
 import React from 'react';
-import Solver, { ColorSet } from './Solver';
+import Solver, { ColorSet } from '../Solver';
 
 type Props = {
     value: ColorSet;
