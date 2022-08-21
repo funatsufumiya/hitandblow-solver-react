@@ -15,7 +15,11 @@ const ColorSetVisualizer = (props: Props) => {
                     })
                 }
             </React.Fragment>&nbsp;
-            <span><code>({Solver.colorSetToString(props.value)})</code></span>
+            {
+                props.value.length > 0 ?
+                    <span><code>({Solver.colorSetToString(props.value)})</code></span>
+                    : <React.Fragment></React.Fragment>
+            }
         </div>
     }
 }
