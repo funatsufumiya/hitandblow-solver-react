@@ -34,7 +34,8 @@ const LastPossiblePatternsVisualizer = (props: { context: GameStatesContext }) =
 
   return <React.Fragment>
     <h3>Possible Patterns</h3>
-    <div className="patternsNum">count: {patterns.length}</div>
+    <div className="patternsNum">total: {patterns.length} patterns</div>
+    <br />
     <div className="patterns">
       {
         patterns.map((pattern, index) => {
