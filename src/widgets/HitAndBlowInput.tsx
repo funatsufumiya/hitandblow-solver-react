@@ -36,8 +36,8 @@ const HitAndBlowInputImpl = (props: { context: GameStatesContext }) => {
         <br />
         <button onClick={() => {
             const input = Solver.stringToColorSet(inputContext.state)
-            const hit = parseInt(hitContext.state)
-            const blow = parseInt(blowContext.state)
+            const hit = parseInt(hitContext.state) || 0;
+            const blow = parseInt(blowContext.state) || 0;
             const gameStates = gameStatesContext.state
             const move = new Move(input, hit, blow)
 

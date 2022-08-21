@@ -24,6 +24,15 @@ describe("Move tests", () => {
     expect(move3.blow).toBe(1)
   })
 
+  test("Move.calcHitAndBlow() 2", () => {
+    let move1 = Move.parse("BGBY,1,0")
+    let colorSet2 = Solver.stringToColorSet("BGYB")
+    let move2 = move1.calcHitAndBlow(colorSet2)
+
+    expect(move2.hits).toBe(2)
+    expect(move2.blow).toBe(2)
+  })
+
   test("Move.compareExact()", () => {
     let move = Move.parse("BRGY,1,2")
     let colorSet1 = Solver.stringToColorSet("BRGP")
