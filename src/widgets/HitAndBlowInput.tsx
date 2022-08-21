@@ -21,18 +21,18 @@ const HitAndBlowInputImpl = (props: { context: GameStatesContext }) => {
         input: <input type="text"
             value={inputContext.state}
             onChange={(e: any) => inputContext.setState(e.target.value)}
-        />
+        /> (ex: brgw)
         <ColorSetVisualizer value={Solver.stringToColorSet(inputContext.state)} key={0} />
         <br />
         &nbsp;hit: <input type="text"
             value={hitContext.state}
             onChange={(e: any) => hitContext.setState(e.target.value)}
-        />
+        /> (ex: 1)
         <br />
         &nbsp;blow: <input type="text"
             value={blowContext.state}
             onChange={(e: any) => blowContext.setState(e.target.value)}
-        />
+        /> (ex: 0)
         <br />
         <button onClick={() => {
             const input = Solver.stringToColorSet(inputContext.state)
