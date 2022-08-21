@@ -49,13 +49,21 @@ class Move {
 class GameState {
   public readonly nextPossiblePatterns: ColorSet[];
 
-  constructor(public moves: Move[], private prevPossiblePatterns: ColorSet[], gameMode: GameMode = GameMode.Duplicable) {
-    if (prevPossiblePatterns.length == 0 && moves.length == 1) {
+  constructor(public moves: Move[] = [], public prevPossiblePatterns: ColorSet[] = [], public gameMode: GameMode = GameMode.Duplicable) {
+    if (prevPossiblePatterns.length == 0 && moves.length <= 1) {
       this.prevPossiblePatterns = Solver.generatePatterns(gameMode)
     }
 
-    const patternFilter: ColorSetFilter = Solver.generatePatternFilter(moves[moves.length - 1])
-    this.nextPossiblePatterns = Solver.filterPattern(this.prevPossiblePatterns, patternFilter)
+    if (moves.length > 0) {
+      const patternFilter: ColorSetFilter = Solver.generatePatternFilter(moves[moves.length - 1])
+      this.nextPossiblePatterns = Solver.filterPattern(this.prevPossiblePatterns, patternFilter)
+    } else {
+      this.nextPossiblePatterns = this.prevPossiblePatterns
+    }
+  }
+
+  public goNext(move: Move) {
+    return new GameState(this.moves.concat([move]), this.nextPossiblePatterns, this.gameMode)
   }
 }
 
@@ -151,7 +159,7 @@ class __Solver {
 
   private generatePatternFilterFunc = (move: Move): ColorSetFilter => {
     return (colorSet: ColorSet): boolean => {
-      return true;
+      return move.matchPattern(colorSet);
     };
   }
 
@@ -163,4 +171,4 @@ class __Solver {
 const Solver = new __Solver()
 
 export default Solver
-export { Color, GameMode, Move }
+export { Color, GameMode, Move, GameState }
