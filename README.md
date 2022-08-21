@@ -1,7 +1,8 @@
-# Hit and Blow Solver
+# Hit and Blow (Mastermind) Solver
 
 ![screenshot](screenshot.jpg)
 
+- Solver for [Hit & Blow (known as Mastermind)](https://en.wikipedia.org/wiki/Mastermind_(board_game))
 - React App
 - TypeScript
 - Solver code (currently just `Solver.ts`) and React App is independent
@@ -22,7 +23,7 @@
 
 ## TODO
 
-- Choice assistence of the best move (scoring each moves and looking moves ahead)
+- Choice assistence of the best move (scoring each moves and looking moves ahead, known as minimax)
 - Displaying more info about pattenrs (color appearance rate, occupation rate, etc.) 
 
 ## License
