@@ -16,7 +16,7 @@ describe("GameState tests", () => {
     let gs2 = gs1.goNext(move)
     expect(gs2.gameMode).toBe(GameMode.Duplicable)
     expect(gs2.prevPossiblePatterns.length).toBe(1296)
-    expect(gs2.nextPossiblePatterns.length).toBe(144)
+    expect(gs2.nextPossiblePatterns.length).toBe(84)
   })
 
   test("GameState() step through v1", () => {
@@ -25,6 +25,6 @@ describe("GameState tests", () => {
     let gs2 = gs1.goNext(move)
     expect(gs2.gameMode).toBe(GameMode.Duplicable)
     expect(gs1.nextPossiblePatterns.length).toBe(1296)
-    expect(gs2.nextPossiblePatterns.length).toBe(216)
+    expect(gs2.nextPossiblePatterns.length).toBe(222)
   })
 })

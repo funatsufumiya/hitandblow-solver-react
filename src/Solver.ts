@@ -4,6 +4,8 @@ enum Color {
   B, R, G, Y, P, W
 }
 
+export type ColorOrNull = Color | null
+
 export type ColorSet = Color[]
 
 enum GameMode {
@@ -14,6 +16,8 @@ export type ColorSetFilter = (colorSet: ColorSet) => boolean
 export type int = number
 
 class Move {
+
+  public isVerbose: boolean = false
 
   constructor(public colorSet: ColorSet, public hits: int, public blow: int) {
   }
@@ -30,13 +34,63 @@ class Move {
   public calcHitAndBlow(colorSet: ColorSet) {
     let hits = 0
     let blow = 0
+    let blowColorSet: ColorOrNull[] = this.colorSet.slice()
+
+    if (this.isVerbose) {
+      console.log("calcHitAndBlow: " + Solver.colorSetToString(colorSet) + " from " + Solver.colorSetToString(this.colorSet))
+      console.log(Solver.colorOrNullSetToString(blowColorSet))
+    }
+
     for (let i = 0; i < colorSet.length; i++) {
       if (colorSet[i] == this.colorSet[i]) {
         hits++
-      } else if (this.colorSet.includes(colorSet[i])) {
-        blow++
+        blowColorSet[i] = null
       }
     }
+
+    if (this.isVerbose) {
+      console.log("hits: " + hits)
+    }
+
+    blowColorSet = blowColorSet.filter(x => x !== null)
+
+    if (this.isVerbose) {
+      console.log(Solver.colorOrNullSetToString(blowColorSet))
+    }
+
+    for (let i = 0; i < colorSet.length; i++) {
+      if (colorSet[i] != this.colorSet[i]) {
+        if (blowColorSet.includes(colorSet[i])) {
+          if (this.isVerbose) {
+            console.log("blows: " + Solver.colorToString(colorSet[i]) + " with " + Solver.colorOrNullSetToString(blowColorSet))
+          }
+
+          blow++
+
+          for (let j = 0; j < blowColorSet.length; j++) {
+            if (blowColorSet[j] == colorSet[i]) {
+              blowColorSet[j] = null
+              break
+            }
+          }
+
+          blowColorSet = blowColorSet.filter(x => x !== null)
+
+          if (this.isVerbose) {
+            console.log("on " + i + ", " + Solver.colorOrNullSetToString(blowColorSet))
+          }
+        } else {
+          if (this.isVerbose) {
+            console.log("not blow: " + Solver.colorToString(colorSet[i]) + " with " + Solver.colorOrNullSetToString(blowColorSet))
+          }
+        }
+      }
+    }
+
+    if (this.isVerbose) {
+      console.log("blow: " + blow)
+    }
+
     return new Move(colorSet, hits, blow)
   }
 
@@ -72,6 +126,10 @@ class __Solver {
 
   public colorSetToString = (colorSet: ColorSet): string => {
     return colorSet.map(c => Color[c]).join('')
+  }
+
+  public colorOrNullSetToString = (colorOrNullSet: ColorOrNull[]): string => {
+    return colorOrNullSet.map(c => c !== null ? Color[c] : '-').join('')
   }
 
   public colorToString = (color: Color): string => {

@@ -11,7 +11,7 @@ describe("Move tests", () => {
     expect(move.blow).toBe(2)
   })
 
-  test("Move.calcHitAndBlow()", () => {
+  test("Move.calcHitAndBlow() 1", () => {
     let move = Move.parse("BRGY,1,2")
     let colorSet2 = Solver.stringToColorSet("BRGY")
     let move2 = move.calcHitAndBlow(colorSet2)
@@ -27,13 +27,23 @@ describe("Move tests", () => {
   test("Move.calcHitAndBlow() 2", () => {
     let move1 = Move.parse("BGBY,1,0")
     let colorSet2 = Solver.stringToColorSet("BGYB")
+    // move1.isVerbose = true
     let move2 = move1.calcHitAndBlow(colorSet2)
 
     expect(move2.hits).toBe(2)
     expect(move2.blow).toBe(2)
   })
 
-  test("Move.compareExact()", () => {
+  test("Move.calcHitAndBlow() 3", () => {
+    let move1 = Move.parse("BGBY,1,0")
+    let colorSet2 = Solver.stringToColorSet("PPYY")
+    let move2 = move1.calcHitAndBlow(colorSet2)
+
+    expect(move2.hits).toBe(1)
+    expect(move2.blow).toBe(0)
+  })
+
+  test("Move.compareExact() 1", () => {
     let move = Move.parse("BRGY,1,2")
     let colorSet1 = Solver.stringToColorSet("BRGP")
     let colorSet2 = Solver.stringToColorSet("BGYW")
@@ -41,6 +51,14 @@ describe("Move tests", () => {
 
     expect(move.matchPattern(colorSet1)).toBe(false)
     expect(move.matchPattern(colorSet2)).toBe(true)
-    expect(move.matchPattern(colorSet3)).toBe(true)
+    // move.isVerbose = true
+    expect(move.matchPattern(colorSet3)).toBe(false)
+  })
+
+  test("Move.compareExact() 2", () => {
+    let move1 = Move.parse("BGBY,1,0")
+    let colorSet2 = Solver.stringToColorSet("PPYY")
+
+    expect(move1.matchPattern(colorSet2)).toBe(true)
   })
 })
