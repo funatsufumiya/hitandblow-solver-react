@@ -11,6 +11,7 @@ const AppImpl = () => {
   const gameStatesContext = useContext(GameStatesContext);
 
   return <React.Fragment>
+    <h2>Hit and Blow Solver</h2>
     <HitAndBlowInput context={gameStatesContext} />
     <hr />
     <GameStatesVisualizer context={gameStatesContext} />
