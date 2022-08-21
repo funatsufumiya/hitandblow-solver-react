@@ -19,6 +19,15 @@ describe("GameState tests", () => {
     expect(gs2.nextPossiblePatterns.length).toBe(84)
   })
 
+  test("GameState() step 1, unduplicable", () => {
+    let gs1 = new GameState([], [], GameMode.Unduplicable)
+    let move = Move.parse("BWGY,1,2")
+    let gs2 = gs1.goNext(move)
+    expect(gs2.gameMode).toBe(GameMode.Unduplicable)
+    expect(gs2.prevPossiblePatterns.length).toBe(360)
+    expect(gs2.nextPossiblePatterns.length).toBe(72)
+  })
+
   test("GameState() step through v1", () => {
     let gs1 = new GameState()
     let move = Move.parse("BBRG,0,2")
