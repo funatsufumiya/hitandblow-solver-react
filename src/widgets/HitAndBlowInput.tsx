@@ -1,10 +1,12 @@
 import StateContextProp from '@/states/StateContextProp';
 import React, { useContext } from 'react';
-import Solver, { GameState, Move } from '../Solver';
+import { validateLocaleAndSetLanguage } from 'typescript';
+import Solver, { GameMode, GameState, Move } from '../Solver';
 import createStateContext from "../states/createStateContext";
 import StateProvider from "../states/StateProvider";
 import ColorSetVisualizer from './ColorSetVisualizer';
 
+const GameModeStateContext = createStateContext<GameMode>();
 const InputStateContext = createStateContext<string>();
 const HitStateContext = createStateContext<string>();
 const BlowStateContext = createStateContext<string>();
@@ -12,12 +14,38 @@ const BlowStateContext = createStateContext<string>();
 type GameStatesContext = StateContextProp<GameState[]>
 
 const HitAndBlowInputImpl = (props: { context: GameStatesContext }) => {
+    const gameModeContext = useContext(GameModeStateContext);
     const inputContext = useContext(InputStateContext);
     const hitContext = useContext(HitStateContext);
     const blowContext = useContext(BlowStateContext);
     const gameStatesContext = props.context;
 
+    const changeGameMode = (gameMode: GameMode) => {
+        gameStatesContext.setState([new GameState([], [], gameMode)])
+
+        inputContext.setState("")
+        hitContext.setState("")
+        blowContext.setState("")
+    }
+
+    const reset = () => {
+        gameStatesContext.setState([new GameState([], [], gameModeContext.state)])
+
+        inputContext.setState("")
+        hitContext.setState("")
+        blowContext.setState("")
+    }
+
     return <React.Fragment>
+        is duplicable : <input type="checkbox"
+            checked={gameModeContext.state === GameMode.Duplicable}
+            onChange={(e) => {
+                const val = e.target.checked ? GameMode.Duplicable : GameMode.Unduplicable
+                gameModeContext.setState(val);
+                changeGameMode(val)
+            }} />
+        <br />
+        <br />
         input: <input type="text"
             value={inputContext.state}
             onChange={(e: any) => inputContext.setState(e.target.value)}
@@ -52,20 +80,18 @@ const HitAndBlowInputImpl = (props: { context: GameStatesContext }) => {
         <br /><br />
 
         <button onClick={() => {
-            gameStatesContext.setState([new GameState()])
-
-            inputContext.setState("")
-            hitContext.setState("")
-            blowContext.setState("")
+            reset()
         }}>RESET ALL!!</button>
     </React.Fragment >
 }
 
 const HitAndBlowInput = (props: { context: GameStatesContext }) => {
-    return <StateProvider context={InputStateContext} defaultValue={""}>
-        <StateProvider context={HitStateContext} defaultValue={""}>
-            <StateProvider context={BlowStateContext} defaultValue={""}>
-                <HitAndBlowInputImpl context={props.context} />
+    return <StateProvider context={GameModeStateContext} defaultValue={GameMode.Duplicable}>
+        <StateProvider context={InputStateContext} defaultValue={""}>
+            <StateProvider context={HitStateContext} defaultValue={""}>
+                <StateProvider context={BlowStateContext} defaultValue={""}>
+                    <HitAndBlowInputImpl context={props.context} />
+                </StateProvider>
             </StateProvider>
         </StateProvider>
     </StateProvider>

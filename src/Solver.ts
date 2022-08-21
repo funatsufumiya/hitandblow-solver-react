@@ -105,7 +105,7 @@ class GameState {
 
   constructor(public moves: Move[] = [], public prevPossiblePatterns: ColorSet[] = [], public gameMode: GameMode = GameMode.Duplicable) {
     if (prevPossiblePatterns.length == 0 && moves.length <= 1) {
-      this.prevPossiblePatterns = Solver.generatePatterns(gameMode)
+      this.prevPossiblePatterns = Solver.generatePatterns(this.gameMode)
     }
 
     if (moves.length > 0) {
