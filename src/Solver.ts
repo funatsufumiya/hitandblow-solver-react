@@ -26,6 +26,24 @@ class Move {
     let parts = str.split(",")
     return this.parseEach(parts[0], parseInt(parts[1]), parseInt(parts[2]))
   }
+
+  public calcHitAndBlow(colorSet: ColorSet) {
+    let hits = 0
+    let blow = 0
+    for (let i = 0; i < colorSet.length; i++) {
+      if (colorSet[i] == this.colorSet[i]) {
+        hits++
+      } else if (this.colorSet.includes(colorSet[i])) {
+        blow++
+      }
+    }
+    return new Move(colorSet, hits, blow)
+  }
+
+  public matchPattern(colorSet: ColorSet) {
+    let move = this.calcHitAndBlow(colorSet)
+    return move.hits == this.hits && move.blow == this.blow
+  }
 }
 
 class GameState {
@@ -127,81 +145,11 @@ class __Solver {
     return s
   }
 
-  private generatePatternFilterRegex = (move: Move): RegExp => {
-    let str = "";
-    if (move.blow == 0) {
-      let s = this.colorSetToString(move.colorSet)
-      if (move.hits == 1) {
-        str = s[0] + "..."
-        str += "|." + s[1] + ".."
-        str += "|.." + s[2] + "."
-        str += "|..." + s[3] + ""
-      } else if (move.hits == 2) {
-        str = s[0] + s[1] + ".."
-        str += "|" + s[0] + "." + s[2] + "."
-        str += "|" + s[0] + ".." + s[3]
-        str += "|." + s[1] + s[2] + "."
-        str += "|." + s[1] + "." + s[3]
-        str += "|.." + s[2] + s[3]
-      } else if (move.hits == 3) {
-        str = s[0] + s[1] + s[2] + "."
-        str += "|" + s[0] + s[1] + "." + s[3]
-        str += "|" + s[0] + "." + s[2] + s[3]
-        str += "|." + s[1] + s[2] + s[3]
-      } else if (move.hits == 4) {
-        str = s
-      } else {
-        return unimplemented()
-      }
-    } else if (move.hits == 0) {
-      let s = this.colorSetToString(move.colorSet)
-      if (move.blow == 1) {
-        let e = ""
-        str = ""
-        e = "[^" + s[3] + "]"
-        str += s[0] + s[1] + s[2] + e
-        str += s[0] + s[2] + s[1] + e
-        str += s[1] + s[2] + s[0] + e
-        str += s[2] + s[1] + s[0] + e
-        str += s[1] + s[0] + s[2] + e
-        str += s[2] + s[0] + s[1] + e
-
-        e = "[^" + s[0] + "]"
-        str += e + s[1] + s[2] + s[3]
-        str += e + s[1] + s[3] + s[2]
-        str += e + s[2] + s[1] + s[3]
-        str += e + s[3] + s[1] + s[2]
-        str += e + s[2] + s[3] + s[1]
-        str += e + s[3] + s[2] + s[1]
-
-        e = "[^" + s[1] + "]"
-        str += s[0] + e + s[2] + s[3]
-        str += s[0] + e + s[3] + s[2]
-        str += s[2] + e + s[0] + s[3]
-        str += s[3] + e + s[0] + s[2]
-        str += s[2] + e + s[3] + s[0]
-        str += s[3] + e + s[2] + s[0]
-
-        e = "[^" + s[2] + "]"
-        str += s[0] + s[1] + e + s[3]
-        str += s[0] + s[3] + e + s[1]
-        str += s[1] + s[0] + e + s[3]
-      } else {
-        return unimplemented()
-      }
-    } else {
-      return unimplemented()
-    }
-    return new RegExp("^" + str + "$")
-  }
-
   public generatePatternFilter = (move: Move): ColorSetFilter => {
-    const regex = this.generatePatternFilterRegex(move)
-
-    return this.generatePatternFilterFunc(regex)
+    return this.generatePatternFilterFunc(move)
   }
 
-  private generatePatternFilterFunc = (regex: RegExp): ColorSetFilter => {
+  private generatePatternFilterFunc = (move: Move): ColorSetFilter => {
     return (colorSet: ColorSet): boolean => {
       return true;
     };
