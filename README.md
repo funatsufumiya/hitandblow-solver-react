@@ -1,5 +1,7 @@
 # Hit and Blow (Mastermind) Solver
 
+https://funatsufumiya.github.io/hitandblow-solver-react/
+
 ![screenshot](screenshot.jpg)
 
 - Solver for [Hit & Blow (known as Mastermind)](https://en.wikipedia.org/wiki/Mastermind_(board_game))
