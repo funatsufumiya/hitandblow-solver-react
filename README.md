@@ -23,6 +23,7 @@
 
 ## TODO
 
+- Change colors (currently only support R, G, B, Y, P, W)
 - Choice assistence of the best move (scoring each moves and looking moves ahead, known as minimax)
 - Displaying more info about pattenrs (color appearance rate, occupation rate, etc.) 
 
